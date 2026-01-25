@@ -1,0 +1,16 @@
+import mongoose from "mongoose";
+import {ENV} from "./env.js";
+
+export const connectDB = async()=>{
+    try{
+        if(!ENV.DB_URL){
+            throw new error("DB_URL is not defined");
+        }
+        const conn=await mongoose.connect(ENV.DB_URL);
+        console.log("Connected to Database:", conn.connection.host);
+    }
+    catch (error){
+        console.error("Error connecting to Database", error);
+        process.exist(1);
+    }
+};
