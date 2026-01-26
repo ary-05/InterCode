@@ -32,8 +32,8 @@ const deleteUser=inngest.createFunction(
 
         const {id}=event.data
 
-        await User.deleteOnee({clerkId:id});
-        //todo : checkk later for some changes in deletion
+        await User.deleteOne({clerkId:id});
+        //todo : check later for some changes in deletion
     }
 )
 
