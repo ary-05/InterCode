@@ -13,17 +13,17 @@ import {
 
 function HomePage() {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-base-100 via-base-200 to-base-300">
+        <div className="min-h-screen bg-linear-to-br from-base-100 via-base-200 to-base-300">
             {/*NAVBAR*/}
             <nav className="bg-base-100/80 backdrop-blur-md border-b border-primary/20 sticky top-0 z-50 shadow-lg">
                 <div className="max-w-7xl mx-auto p-4 flex items-center justify-between">
                     {/*Logo*/}
                     <Link to={"/"} className="flex items-center gap-2 sm:gap-3 hover:scale-105 transition-transform duration-200">
-                        <div className="size-8 sm:size-10 rounded-xl bg-gradient-to-br from-primary via-secondary to-accent flex items-center justify-center shadow-lg">
+                        <div className="size-8 sm:size-10 rounded-xl bg-linear-to-br from-primary via-secondary to-accent flex items-center justify-center shadow-lg">
                             <Headset className="size-5 sm:size-6 text-white" />
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-xl sm:text-2xl font-bold tracking-wide bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                            <span className="text-xl sm:text-2xl font-nunito font-bold tracking-wide bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
                                 InterCode
                             </span>
                             <span className="text-xs text-base-content/60 font-medium -mt-1">Let's Code</span>
@@ -31,7 +31,7 @@ function HomePage() {
                     </Link>
                     {/* AUTH BTN */}
                     <SignInButton mode="modal">
-                        <button className="group px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-primary to-secondary rounded-xl text-white font-semibold text-xs sm:text-sm shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 flex items-center gap-2">
+                        <button className="group px-4 sm:px-6 py-2 sm:py-3 bg-linear-to-r from-primary to-secondary rounded-xl text-white font-nunito font-bold text-xs sm:text-sm shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 flex items-center gap-2">
                             <span className="hidden sm:inline">Get Started</span>
                             <span className="sm:hidden">Start</span>
                             <ArrowRightIcon className="size-4 group-hover:translate-x-0.5 transition-transform" />
@@ -45,27 +45,27 @@ function HomePage() {
                 <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                     {/* LEFT CONTENT */}
                     <div className="space-y-6 sm:space-y-8">
-                        <div className="badge badge-primary badge-md sm:badge-lg">
+                        <div className="badge badge-primary badge-md sm:badge-lg font-nunito font-semibold">
                             <ZapIcon className="size-3 sm:size-4" />
                             Real-time Collaboration
                         </div>
 
                         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight">
-                            <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+                            <span className="bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent font-nunito font-black">
                             Code Together,
                             </span>
                             <br />
-                            <span className="text-base-content">Grow Together</span>
+                            <span className="text-base-content font-nunito font-black">Grow Together</span>
                         </h1>
 
-                        <p className="text-base sm:text-xl text-base-content/70 leading-relaxed max-w-xl">
+                        <p className="text-base sm:text-xl text-base-content/70 leading-relaxed max-w-xl font-nunito font-semibold">
                             Built for collaborative coding interviews and pair programming.
                             Live collaboration, Real-time coding, Interview preparation.
                         </p>
 
                         {/* FEATURE PILLS */}
-                        <div className="flex flex-wrap gap-2 sm:gap-3">
-                            <div className="badge badge-md sm:badge-lg badge-outline">
+                        <div className="flex flex-wrap gap-2 sm:gap-3 font-nunito font-semibold" >
+                            <div className="badge badge-md sm:badge-lg badge-outline ">
                                 <CheckIcon className="size-3 sm:size-4 text-success" />
                                 Live Video Chat
                             </div>
@@ -80,7 +80,7 @@ function HomePage() {
                         </div>
 
                         {/* CTA Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 ">
                             <SignInButton mode="modal">
                                 <button className="btn btn-primary btn-md sm:btn-lg w-full sm:w-auto">
                                     Start Practicing
@@ -110,7 +110,7 @@ function HomePage() {
                                     <div className="stat-title text-xs sm:text-sm">Uptime</div>
                                 </div>
                             </div>
-                            <p className="text-xs text-gray-500 text-center">*Demo statistics for illustration purposes</p>
+                            <p className="text-xs text-gray-500 text-center font-nunito font-bold">*Demo statistics for illustration purposes</p>
                         </div>
                     </div>
 
