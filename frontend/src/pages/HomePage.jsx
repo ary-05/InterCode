@@ -116,8 +116,8 @@ function HomePage() {
 
                     {/* RIGHT IMAGE */}
                     <div className="order-first lg:order-last flex justify-center">
-                        <img
-                            src="/hero3.png"
+                        <img 
+                            src="/hero.png"
                             alt="InterCode Platform"
                             className="w-[100%] h-auto rounded-2xl sm:rounded-3xl shadow-2xl border-2 sm:border-3 border-[#6217d2] hover:scale-105 transition-transform duration-500"
                         />
