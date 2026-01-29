@@ -16,7 +16,7 @@ function ProblemsPage() {
     <div className="min-h-screen bg-[#020018]">
       <Navbar />
 
-      <div className="max-w-6xl mx-auto px-4 py-12">
+      <div className="px-7 py-11">
         {/* HEADER */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2 text-white font-nunito">Practice Problems</h1>
