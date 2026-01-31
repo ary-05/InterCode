@@ -21,7 +21,7 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
             <div className="p-2 bg-[#6217d2]/20 border border-[#6217d2] rounded-xl">
               <ZapIcon className="size-5 text-[#6217d2]" />
             </div>
-            <h2 className="text-2xl font-black text-white font-nunito">Live Sessions</h2>
+            <h2 className="text-2xl text-white font-semibold font-nunito">Live Sessions</h2>
           </div>
 
           <div className="flex items-center gap-2">

@@ -5,7 +5,7 @@ function WelcomeSection({ onCreateSession }) {
   const { user } = useUser();
 
   return (
-    <div className="px-7 pt-11">
+    <div className="px-7 pt-10">
       <div className="bg-[#030023]/50 backdrop-blur-sm border border-[#6217d2]/30 rounded-2xl shadow-xl p-8">
         <div className="flex items-center justify-between">
           <div>
@@ -18,14 +18,14 @@ function WelcomeSection({ onCreateSession }) {
               </h1>
             </div>
             <p className="text-xl text-white/60 ml-16 font-nunito">
-              Ready to level up your coding skills?
+              Ready to optimize your skills?
             </p>
           </div>
           <button
             onClick={onCreateSession}
             className="group px-8 py-4 bg-[#6217d2] hover:bg-[#7528e3] rounded-2xl transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-[#6217d2]/50"
           >
-            <div className="flex items-center gap-3 text-white font-bold text-lg font-nunito">
+            <div className="flex items-center gap-2 text-white font-bold text-lg font-nunito">
               <ZapIcon className="w-6 h-6" />
               <span>Create Session</span>
               <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

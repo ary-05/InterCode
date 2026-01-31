@@ -1,5 +1,5 @@
 import Editor from "@monaco-editor/react";
-import { Loader2Icon, PlayIcon, CodeIcon } from "lucide-react";
+import { Loader2Icon, PlayIcon, CodeIcon, RotateCcwIcon } from "lucide-react";
 import { LANGUAGE_CONFIG } from "../data/problems";
 
 function CodeEditorPanel({
@@ -9,6 +9,8 @@ function CodeEditorPanel({
   onLanguageChange,
   onCodeChange,
   onRunCode,
+  starterCode,
+  onResetCode,
 }) {
   return (
     <div className="h-full bg-[#0d1117] flex flex-col border-l border-[#30363d]">
@@ -21,9 +23,9 @@ function CodeEditorPanel({
               alt={LANGUAGE_CONFIG[selectedLanguage].name}
               className="size-5"
             />
-            <select 
-              className="px-3 py-1.5 bg-[#0d1117] border border-[#30363d] rounded text-white text-sm font-nunito focus:outline-none focus:border-[#6217d2] transition-colors cursor-pointer hover:border-[#6217d2]/50" 
-              value={selectedLanguage} 
+            <select
+              className="px-3 py-1.5 bg-[#0d1117] border border-[#30363d] rounded text-white text-sm font-nunito focus:outline-none focus:border-[#6217d2] transition-colors cursor-pointer hover:border-[#6217d2]/50"
+              value={selectedLanguage}
               onChange={onLanguageChange}
             >
               {Object.entries(LANGUAGE_CONFIG).map(([key, lang]) => (
@@ -34,10 +36,18 @@ function CodeEditorPanel({
             </select>
           </div>
         </div>
+        
+        <button
+          className="px-4 py-1.5 bg-[#090040] hover:bg-[#090040]/70 border border-[#6217d2]/30 hover:border-[#6217d2] rounded-lg text-white text-sm font-semibold font-nunito transition-all duration-200 flex items-center gap-2"
+          onClick={onResetCode}
+        >
+          <RotateCcwIcon className="size-4" />
+          Reset
+        </button>
 
-        <button 
-          className="px-4 py-1.5 bg-gradient-to-r from-[#6217d2] to-[#31066e] hover:from-[#31066e] hover:to-[#6217d2] rounded-lg text-white text-sm font-semibold font-nunito shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" 
-          disabled={isRunning} 
+        <button
+          className="px-4 py-1.5 bg-gradient-to-r from-[#6217d2] to-[#31066e] hover:from-[#31066e] hover:to-[#6217d2] rounded-lg text-white text-sm font-semibold font-nunito shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={isRunning}
           onClick={onRunCode}
         >
           {isRunning ? (

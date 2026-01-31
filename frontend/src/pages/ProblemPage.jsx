@@ -41,6 +41,11 @@ function ProblemPage() {
   };
 
   const handleProblemChange = (newProblemId) => navigate(`/problem/${newProblemId}`);
+  const handleResetCode = () => {
+    setCode(currentProblem.starterCode[selectedLanguage]);
+    setOutput(null);
+    toast.success("Code reset!");
+  };
 
   const triggerConfetti = () => {
     confetti({
@@ -136,6 +141,7 @@ function ProblemPage() {
                   onLanguageChange={handleLanguageChange}
                   onCodeChange={setCode}
                   onRunCode={handleRunCode}
+                  onResetCode={handleResetCode}
                 />
               </Panel>
 
