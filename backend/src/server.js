@@ -1,49 +1,83 @@
 import express from "express";
 import path from "path";
 import cors from "cors";
+import { WebSocketServer } from "ws";
+import jwt from "jsonwebtoken";
 
-import {ENV} from "./lib/env.js";
+const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
+
+import { ENV } from "./lib/env.js";
 import { connectDB } from "./lib/db.js";
-import {inngest, functions} from "./lib/inngest.js";
-import {serve} from "inngest/express";
-import { clerkMiddleware } from '@clerk/express'
+import { inngest, functions } from "./lib/inngest.js";
+import { serve } from "inngest/express";
+import { clerkMiddleware } from "@clerk/express";
 import { protectRoute } from "./middleware/protectRoute.js";
 import chatRoutes from "./routes/chatRoutes.js";
 import sessionRoutes from "./routes/sessionRoute.js";
 
-const app=express();
-const __dirname=path.resolve();
+const app = express();
+const __dirname = path.resolve();
 
 //middlewares
-app.use(express.json())
-app.use(cors({origin:ENV.CLIENT_URL, credentials:true})); 
+app.use(express.json());
+app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
 //cred true means : server allows frontend to inc cookies on request
 app.use(clerkMiddleware()); //this adds auth to request object : req.auth()
 
-app.use("/api/inngest", serve({client:inngest, functions}));
+app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use("/api/chat", chatRoutes);
 app.use("/api/sessions", sessionRoutes);
 
-app.get("/health", (req,res)=>{
-    res.status(200).json({ msg:"api is running" });
-})
+app.get("/health", (req, res) => {
+  res.status(200).json({ msg: "api is running" });
+});
 //deployment ready
-if(ENV.NODE_ENV==="production") {
-    app.use(express.static(path.join(__dirname,"../frontend/dist")))
+if (ENV.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-    app.get("/{*any}", (req,res) => {
-        res.sendFile(path.join(__dirname, "../frontend","dist","index.html"));
-    });
+  app.get("/{*any}", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+  });
 }
 
-const startServer = async() => {
-    try{
-        await connectDB();
-        app.listen(ENV.PORT,()=>console.log("Server running on port :", ENV.PORT));
-    }
-    catch(error){
-        console.error("Error starting the server", error)
-    }
+const startServer = async () => {
+  try {
+    await connectDB();
+    const server = app.listen(ENV.PORT, () =>
+      console.log("Server running on port :", ENV.PORT)
+    );
+
+    // WebSocket server setup
+    const wss = new WebSocketServer({ server });
+
+    wss.on("connection", (ws, req) => {
+      const url = new URL(req.url, `http://${req.headers.host}`);
+      const sessionId = url.searchParams.get("sessionId");
+
+      if (!sessionId) {
+        ws.close(1008, "Session ID missing");
+        return;
+      }
+
+      // Attach sessionId to the WebSocket connection
+      ws.sessionId = sessionId;
+
+      // Handle WebSocket messages here
+      ws.on("message", (message) => {
+        // Broadcast to other clients in the same session
+        wss.clients.forEach((client) => {
+          if (
+            client !== ws &&
+            client.sessionId === sessionId &&
+            client.readyState === ws.OPEN
+          ) {
+            client.send(message.toString());
+          }
+        });
+      });
+    });
+  } catch (error) {
+    console.error("Error starting the server", error);
+  }
 };
 startServer();
-

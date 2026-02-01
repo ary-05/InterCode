@@ -1,21 +1,36 @@
 import { chatClient, streamClient } from "../lib/stream.js";
 import Session from "../models/Session.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from "uuid";
+
+const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
 export async function createSession(req, res) {
   try {
-    const { problem, difficulty } = req.body;
+    const { problem, difficulty, password } = req.body;
     const userId = req.user._id;
     const clerkId = req.user.clerkId;
 
-    if (!problem || !difficulty) {
-      return res.status(400).json({ message: "Problem and difficulty are required" });
+    if (!problem || !difficulty || !password) {
+      return res.status(400).json({ message: "Problem, difficulty, and password are required" });
     }
 
     // generate a unique call id for stream video
     const callId = `session_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    const sessionId = uuidv4();
+
+    const passwordHash = await bcrypt.hash(password, 10);
 
     // create session in db
-    const session = await Session.create({ problem, difficulty, host: userId, callId });
+    const session = await Session.create({
+      problem,
+      difficulty,
+      host: userId,
+      callId,
+      sessionId,
+      passwordHash,
+    });
 
     // create stream video call
     await streamClient.video.call("default", callId).getOrCreate({
@@ -95,6 +110,7 @@ export async function getSessionById(req, res) {
 export async function joinSession(req, res) {
   try {
     const { id } = req.params;
+    const { password } = req.body || {};
     const userId = req.user._id;
     const clerkId = req.user.clerkId;
 
@@ -106,12 +122,31 @@ export async function joinSession(req, res) {
       return res.status(400).json({ message: "Cannot join a completed session" });
     }
 
-    if (session.host.toString() === userId.toString()) {
-      return res.status(400).json({ message: "Host cannot join their own session as participant" });
+    // Verify password if session has one
+    if (session.passwordHash) {
+      if (!password) {
+        return res.status(401).json({ message: "Password required", requiresPassword: true });
+      }
+      const isPasswordValid = await bcrypt.compare(password, session.passwordHash);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: "Invalid password" });
+      }
     }
 
-    // check if session is already full - has a participant
-    if (session.participant) return res.status(409).json({ message: "Session is full" });
+    if (session.host.toString() === userId.toString()) {
+      // Host is already in the session, just return success
+      return res.status(200).json({ session });
+    }
+
+    // Check if session is already full - has a participant
+    if (session.participant && session.participant.toString() !== userId.toString()) {
+      return res.status(409).json({ message: "Session is full" });
+    }
+
+    // If user is already participant, just return
+    if (session.participant && session.participant.toString() === userId.toString()) {
+      return res.status(200).json({ session });
+    }
 
     session.participant = userId;
     await session.save();
@@ -159,6 +194,21 @@ export async function endSession(req, res) {
     res.status(200).json({ session, message: "Session ended successfully" });
   } catch (error) {
     console.log("Error in endSession controller:", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+export async function getSession(req, res) {
+  try {
+    const { sessionId } = req.params;
+
+    const session = await Session.findOne({ sessionId });
+
+    if (!session) return res.status(404).json({ message: "Session not found" });
+
+    res.status(200).json({ session });
+  } catch (error) {
+    console.log("Error in getSession controller:", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
 }

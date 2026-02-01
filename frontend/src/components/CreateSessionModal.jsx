@@ -33,6 +33,7 @@ function CreateSessionModal({
                 onChange={(e) => {
                   const selectedProblem = problems.find((p) => p.title === e.target.value);
                   setRoomConfig({
+                    ...roomConfig,
                     difficulty: selectedProblem.difficulty,
                     problem: e.target.value,
                   });
@@ -48,6 +49,27 @@ function CreateSessionModal({
                   </option>
                 ))}
               </select>
+            </div>
+
+            {/* PASSWORD INPUT */}
+            <div className="space-y-2">
+              <label className="block">
+                <span className="text-white font-nunito font-semibold">Set Session Password</span>
+                <span className="text-error ml-1">*</span>
+              </label>
+
+              <input
+                type="password"
+                className="w-full px-4 py-3 bg-[#090040] border border-[#6217d2]/30 rounded-xl text-white font-nunito focus:outline-none focus:border-[#6217d2] transition-colors"
+                placeholder="Enter a secure password..."
+                value={roomConfig.password}
+                onChange={(e) =>
+                  setRoomConfig({
+                    ...roomConfig,
+                    password: e.target.value,
+                  })
+                }
+              />
             </div>
 
             {/* ROOM SUMMARY */}
@@ -80,7 +102,7 @@ function CreateSessionModal({
             <button
               className="flex-1 px-6 py-3 bg-[#6217d2] hover:bg-[#7528e3] text-white rounded-xl font-nunito font-semibold transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-[#6217d2]/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
               onClick={onCreateRoom}
-              disabled={isCreating || !roomConfig.problem}
+              disabled={isCreating || !roomConfig.problem || !roomConfig.password}
             >
               {isCreating ? (
                 <LoaderIcon className="size-5 animate-spin" />

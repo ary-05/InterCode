@@ -15,6 +15,7 @@ import useStreamClient from "../hooks/useStreamClient";
 import { StreamCall, StreamVideo } from "@stream-io/video-react-sdk";
 import VideoCallUI from "../components/VideoCallUI";
 import toast from "react-hot-toast";
+import JoinSessionModal from "../components/JoinSessionModal";
 
 function SessionPage() {
   const navigate = useNavigate();
@@ -22,6 +23,9 @@ function SessionPage() {
   const { user } = useUser();
   const [output, setOutput] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
+  const [isJoinModalOpen, setJoinModalOpen] = useState(false);
+  const [isJoining, setJoining] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const { data: sessionData, isLoading: loadingSession, refetch } = useSessionById(id);
 
@@ -32,11 +36,14 @@ function SessionPage() {
   const isHost = session?.host?.clerkId === user?.id;
   const isParticipant = session?.participant?.clerkId === user?.id;
 
+  // Only connect to video/chat after authentication
+  const shouldConnectStream = isHost || isAuthenticated;
+
   const { call, channel, chatClient, isInitializingCall, streamClient } = useStreamClient(
-    session,
+    shouldConnectStream ? session : null,
     loadingSession,
     isHost,
-    isParticipant
+    isParticipant || isAuthenticated
   );
 
   //problem data based on session problem title
@@ -47,15 +54,19 @@ function SessionPage() {
   const [selectedLanguage, setSelectedLanguage] = useState("cpp");
   const [code, setCode] = useState(problemData?.starterCode?.[selectedLanguage] || "");
 
-  // auto-join session if user is not already a participant and not the host
+  // Show join modal if user is not host (always require password for non-hosts)
   useEffect(() => {
     if (!session || !user || loadingSession) return;
-    if (isHost || isParticipant) return;
+    
+    // Host doesn't need password
+    if (isHost) {
+      setIsAuthenticated(true);
+      return;
+    }
 
-    joinSessionMutation.mutate(id, { onSuccess: refetch });
-
-    // remove the joinSessionMutation, refetch from dependencies to avoid infinite loop
-  }, [session, user, loadingSession, isHost, isParticipant, id]);
+    // Non-hosts always need to enter password
+    setJoinModalOpen(true);
+  }, [session, user, loadingSession, isHost]);
 
   // redirect the "participant" when session ends
   useEffect(() => {
@@ -102,9 +113,44 @@ function SessionPage() {
     }
   };
 
+  const handleJoinSession = ({ sessionId, password }) => {
+    setJoining(true);
+    joinSessionMutation.mutate(
+      { id: sessionId, password },
+      {
+        onSuccess: () => {
+          setJoining(false);
+          setJoinModalOpen(false);
+          setIsAuthenticated(true);
+          refetch();
+        },
+        onError: () => {
+          setJoining(false);
+          toast.error("Failed to join session. Check session ID and password.");
+        },
+      }
+    );
+  };
+
+  // open join modal for participants
+  useEffect(() => {
+    if (!session || !user || loadingSession) return;
+    if (isHost || isParticipant) return;
+
+    setJoinModalOpen(true);
+  }, [session, user, loadingSession, isHost, isParticipant]);
+
   return (
     <div className="h-screen bg-base-100 flex flex-col">
       <Navbar />
+
+      <JoinSessionModal
+        isOpen={isJoinModalOpen}
+        onClose={() => navigate("/dashboard")}
+        onJoinSession={handleJoinSession}
+        isJoining={isJoining}
+        sessionId={id}
+      />
 
       <div className="flex-1">
         <PanelGroup direction="horizontal">
@@ -247,6 +293,7 @@ function SessionPage() {
                       onCodeChange={(value) => setCode(value)}
                       onRunCode={handleRunCode}
                       onResetCode={handleResetCode}
+                      sessionId={id}
                     />
                   </Panel>
 
