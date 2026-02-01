@@ -14,7 +14,7 @@ function DashboardPage() {
   const navigate = useNavigate();
   const { user } = useUser();
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [roomConfig, setRoomConfig] = useState({ problem: "", difficulty: "" });
+  const [roomConfig, setRoomConfig] = useState({ problem: "", difficulty: "", password: "" });
 
   const createSessionMutation = useCreateSession();
 
@@ -22,12 +22,13 @@ function DashboardPage() {
   const { data: recentSessionsData, isLoading: loadingRecentSessions } = useMyRecentSessions();
 
   const handleCreateRoom = () => {
-    if (!roomConfig.problem || !roomConfig.difficulty) return;
+    if (!roomConfig.problem || !roomConfig.difficulty || !roomConfig.password) return;
 
     createSessionMutation.mutate(
       {
         problem: roomConfig.problem,
         difficulty: roomConfig.difficulty.toLowerCase(),
+        password: roomConfig.password,
       },
       {
         onSuccess: (data) => {

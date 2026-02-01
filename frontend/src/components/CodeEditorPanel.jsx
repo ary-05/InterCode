@@ -1,6 +1,8 @@
+import { useEffect, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import { Loader2Icon, PlayIcon, CodeIcon, RotateCcwIcon } from "lucide-react";
 import { LANGUAGE_CONFIG } from "../data/problems";
+import { ENV } from "../lib/env";
 
 function CodeEditorPanel({
   selectedLanguage,
@@ -11,7 +13,64 @@ function CodeEditorPanel({
   onRunCode,
   starterCode,
   onResetCode,
+  sessionId,
 }) {
+  const wsRef = useRef(null);
+  const isRemoteUpdate = useRef(false);
+
+  useEffect(() => {
+    if (!sessionId) return;
+    
+    // Clean up existing connection first
+    if (wsRef.current) {
+      wsRef.current.close();
+      wsRef.current = null;
+    }
+
+    let ws = null;
+    let isCancelled = false;
+
+    // Small delay to handle React StrictMode double-mounting
+    const timeoutId = setTimeout(() => {
+      if (isCancelled) return;
+      
+      ws = new WebSocket(`${ENV.WS_URL}?sessionId=${sessionId}`);
+      wsRef.current = ws;
+
+      ws.onmessage = (event) => {
+        try {
+          const message = JSON.parse(event.data);
+          if (message.type === "code-update") {
+            isRemoteUpdate.current = true;
+            onCodeChange(message.payload);
+          }
+        } catch (err) {
+          // Ignore parse errors
+        }
+      };
+    }, 100);
+
+    return () => {
+      isCancelled = true;
+      clearTimeout(timeoutId);
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
+    };
+  }, [sessionId]);
+
+  const handleCodeChange = (newCode) => {
+    onCodeChange(newCode);
+    
+    // Only send if this is a local change, not a remote update
+    if (!isRemoteUpdate.current && wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
+        JSON.stringify({ type: "code-update", payload: newCode })
+      );
+    }
+    isRemoteUpdate.current = false;
+  };
+
   return (
     <div className="h-full bg-[#0d1117] flex flex-col border-l border-[#30363d]">
       <div className="flex items-center justify-between px-4 py-2.5 bg-[#161b22] border-b border-[#30363d]">
@@ -36,7 +95,7 @@ function CodeEditorPanel({
             </select>
           </div>
         </div>
-        
+
         <button
           className="px-4 py-1.5 bg-[#090040] hover:bg-[#090040]/70 border border-[#6217d2]/30 hover:border-[#6217d2] rounded-lg text-white text-sm font-semibold font-nunito transition-all duration-200 flex items-center gap-2"
           onClick={onResetCode}
@@ -69,7 +128,7 @@ function CodeEditorPanel({
           height={"100%"}
           language={LANGUAGE_CONFIG[selectedLanguage].monacoLang}
           value={code}
-          onChange={onCodeChange}
+          onChange={handleCodeChange}
           theme="vs-dark"
           options={{
             fontSize: 14,
