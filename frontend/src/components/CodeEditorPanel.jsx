@@ -43,6 +43,9 @@ function CodeEditorPanel({
           if (message.type === "code-update") {
             isRemoteUpdate.current = true;
             onCodeChange(message.payload);
+          } else if (message.type === "language-change") {
+            isRemoteUpdate.current = true;
+            onLanguageChange({ target: { value: message.payload } });
           }
         } catch (err) {
           // Ignore parse errors
@@ -71,6 +74,29 @@ function CodeEditorPanel({
     isRemoteUpdate.current = false;
   };
 
+  const handleLanguageChange = (e) => {
+    const newLanguage = e.target.value;
+    onLanguageChange(e);
+    
+    // Broadcast language change to other users
+    if (!isRemoteUpdate.current && wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
+        JSON.stringify({ type: "language-change", payload: newLanguage })
+      );
+    }
+    isRemoteUpdate.current = false;
+  };
+
+  const handleResetCode = () => {
+    onResetCode();
+    // Broadcast the actual starter code so both clients have the same code
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
+        JSON.stringify({ type: "code-update", payload: starterCode[selectedLanguage] })
+      );
+    }
+  };
+
   return (
     <div className="h-full bg-[#0d1117] flex flex-col border-l border-[#30363d]">
       <div className="flex items-center justify-between px-4 py-2.5 bg-[#161b22] border-b border-[#30363d]">
@@ -85,7 +111,7 @@ function CodeEditorPanel({
             <select
               className="px-3 py-1.5 bg-[#0d1117] border border-[#30363d] rounded text-white text-sm font-nunito focus:outline-none focus:border-[#6217d2] transition-colors cursor-pointer hover:border-[#6217d2]/50"
               value={selectedLanguage}
-              onChange={onLanguageChange}
+              onChange={handleLanguageChange}
             >
               {Object.entries(LANGUAGE_CONFIG).map(([key, lang]) => (
                 <option key={key} value={key} className="bg-[#161b22]">
@@ -98,7 +124,7 @@ function CodeEditorPanel({
 
         <button
           className="px-4 py-1.5 bg-[#090040] hover:bg-[#090040]/70 border border-[#6217d2]/30 hover:border-[#6217d2] rounded-lg text-white text-sm font-semibold font-nunito transition-all duration-200 flex items-center gap-2"
-          onClick={onResetCode}
+          onClick={handleResetCode}
         >
           <RotateCcwIcon className="size-4" />
           Reset

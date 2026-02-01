@@ -293,6 +293,7 @@ function SessionPage() {
                       onCodeChange={(value) => setCode(value)}
                       onRunCode={handleRunCode}
                       onResetCode={handleResetCode}
+                      starterCode={problemData?.starterCode}
                       sessionId={id}
                     />
                   </Panel>
