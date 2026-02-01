@@ -26,7 +26,7 @@ function HomePage() {
                             <span className="text-xl sm:text-2xl font-nunito font-bold tracking-wide bg-gradient-to-r from-[#6217d2] to-[#FFCC00] bg-clip-text text-transparent">
                                 InterCode
                             </span>
-                            <span className="text-xs text-white/60 font-medium -mt-1">Let's Code</span>
+                            <span className="text-xs text-white/60 font-medium font-nunito -mt-1">Let's Code</span>
                         </div>
                     </Link>
                     {/* AUTH BTN */}
@@ -98,16 +98,16 @@ function HomePage() {
                         <div className="space-y-2">
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-[#090040]/50 backdrop-blur-sm border border-[#6217d2]/30 rounded-2xl p-6 shadow-lg w-full">
                                 <div className="text-center">
-                                    <div className="text-3xl sm:text-4xl font-bold text-[#6217d2]">1K+</div>
-                                    <div className="text-xs sm:text-sm text-white/60">Active Users</div>
+                                    <div className="text-3xl sm:text-4xl font-bold font-nunito text-[#6217d2]">1K+</div>
+                                    <div className="text-xs sm:text-sm font-nunito text-white/60">Active Users</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-3xl sm:text-4xl font-bold text-[#FFCC00]">5K+</div>
-                                    <div className="text-xs sm:text-sm text-white/60">Sessions</div>
+                                    <div className="text-3xl sm:text-4xl font-bold font-nunito text-[#FFCC00]">5K+</div>
+                                    <div className="text-xs sm:text-sm font-nunito text-white/60">Sessions</div>
                                 </div>
                                 <div className="text-center">
-                                    <div className="text-3xl sm:text-4xl font-bold text-[#6217d2]">99%</div>
-                                    <div className="text-xs sm:text-sm text-white/60">Uptime</div>
+                                    <div className="text-3xl sm:text-4xl font-bold font-nunito text-[#6217d2]">99%</div>
+                                    <div className="text-xs sm:text-sm font-nunito text-white/60">Uptime</div>
                                 </div>
                             </div>
                             <p className="text-xs text-white/40 text-center font-nunito font-bold">*Demo statistics for illustration purposes</p>
@@ -128,11 +128,11 @@ function HomePage() {
             {/* FEATURES SECTION */}
             <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16 lg:py-20 pb-16 sm:pb-20">
                 <div className="text-center mb-12 sm:mb-16">
-                    <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-white">
-                        Everything You Need to <span className="text-[#FFCC00] font-mono">Succeed</span>
+                    <h2 className="text-3xl sm:text-4xl font-bold mb-4 font-nunito text-white">
+                        Everything You Need to <span className="text-[#FFCC00] font-nunito">Succeed</span>
                     </h2>
-                    <p className="text-base sm:text-lg text-white/70 max-w-2xl mx-auto px-4">
-                        Powerful features designed to make your coding interviews seamless and productive
+                    <p className="text-base sm:text-lg font-nunito text-white/70 max-w-2xl mx-auto px-4">
+                        Powerful features designed to make your coding interviews seamless and productive.
                     </p>
                 </div>
 
@@ -144,8 +144,8 @@ function HomePage() {
                             <div className="size-14 sm:size-16 bg-[#6217d2]/20 border border-[#6217d2] rounded-2xl flex items-center justify-center mb-4">
                                 <VideoIcon className="size-7 sm:size-8 text-[#6217d2]" />
                             </div>
-                            <h3 className="text-lg sm:text-xl font-bold mb-2 text-white">HD Video Call</h3>
-                            <p className="text-sm sm:text-base text-white/70">
+                            <h3 className="text-lg sm:text-xl font-bold mb-2 font-nunito text-white">HD Video Call</h3>
+                            <p className="text-sm sm:text-base font-nunito text-white/70">
                                 Crystal clear video and audio for seamless communication during interviews
                             </p>
                         </div>
@@ -157,8 +157,8 @@ function HomePage() {
                             <div className="size-14 sm:size-16 bg-[#FFCC00]/20 border border-[#FFCC00] rounded-2xl flex items-center justify-center mb-4">
                                 <Code2Icon className="size-7 sm:size-8 text-[#FFCC00]" />
                             </div>
-                            <h3 className="text-lg sm:text-xl font-bold mb-2 text-white">Live Code Editor</h3>
-                            <p className="text-sm sm:text-base text-white/70">
+                            <h3 className="text-lg sm:text-xl font-bold mb-2 font-nunito text-white">Live Code Editor</h3>
+                            <p className="text-sm sm:text-base font-nunito text-white/70">
                                 Collaborate in real-time with syntax highlighting and multiple language support
                             </p>
                         </div>
@@ -170,8 +170,8 @@ function HomePage() {
                             <div className="size-14 sm:size-16 bg-[#6217d2]/20 border border-[#6217d2] rounded-2xl flex items-center justify-center mb-4">
                                 <UsersIcon className="size-7 sm:size-8 text-[#6217d2]" />
                             </div>
-                            <h3 className="text-lg sm:text-xl font-bold mb-2 text-white">Easy Collaboration</h3>
-                            <p className="text-sm sm:text-base text-white/70">
+                            <h3 className="text-lg sm:text-xl font-bold mb-2 font-nunito text-white">Easy Collaboration</h3>
+                            <p className="text-sm sm:text-base font-nunito text-white/70">
                                 Share your screen, discuss solutions, and learn from each other in real-time
                             </p>
                         </div>
