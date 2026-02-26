@@ -88,7 +88,7 @@ function HomePage() {
                                 </button>
                             </SignInButton>
 
-                            <button className="px-6 py-3 sm:px-8 sm:py-4 bg-transparent border-2 border-[#FFCC00] hover:bg-[#000000]/10 rounded-xl text-[#FFCC00] font-nunito font-bold shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 flex items-center justify-center gap-2 w-full sm:w-auto">
+                            <button onClick={() => window.open('https://drive.google.com/drive/folders/1nYBgf5eN-B-_xWEfmDDE-c7AyKHP_DsC?usp=sharing', '_blank')} className="px-6 py-3 sm:px-8 sm:py-4 bg-transparent border-2 border-[#FFCC00] hover:bg-[#000000]/10 rounded-xl text-[#FFCC00] font-nunito font-bold shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 flex items-center justify-center gap-2 w-full sm:w-auto">
                                 <VideoIcon className="size-4 sm:size-5" />
                                 Watch Demo
                             </button>
