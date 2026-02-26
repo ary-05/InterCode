@@ -14,9 +14,10 @@ import "stream-chat-react/dist/css/v2/index.css";
 
 function VideoCallUI({ chatClient, channel }) {
   const navigate = useNavigate();
-  const { useCallCallingState, useParticipantCount } = useCallStateHooks();
+  const { useCallCallingState, useParticipants } = useCallStateHooks();
   const callingState = useCallCallingState();
-  const participantCount = useParticipantCount();
+  const participants = useParticipants();
+  const participantCount = participants.length;
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   if (callingState === CallingState.JOINING) {
