@@ -5,7 +5,7 @@ import {
   useCallStateHooks,
 } from "@stream-io/video-react-sdk";
 import { Loader2Icon, MessageSquareIcon, UsersIcon, XIcon } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { Channel, Chat, MessageInput, MessageList, Thread, Window } from "stream-chat-react";
 
@@ -17,7 +17,17 @@ function VideoCallUI({ chatClient, channel }) {
   const { useCallCallingState, useParticipants } = useCallStateHooks();
   const callingState = useCallCallingState();
   const participants = useParticipants();
-  const participantCount = participants.length;
+  const participantCount = useMemo(() => {
+    const uniqueUserIds = new Set();
+
+    for (const participant of participants) {
+      const participantUserId = participant?.userId || participant?.user?.id;
+      if (participantUserId) uniqueUserIds.add(participantUserId);
+    }
+
+    // Fallback to raw participant length if user ids are unavailable.
+    return uniqueUserIds.size > 0 ? uniqueUserIds.size : participants.length;
+  }, [participants]);
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   if (callingState === CallingState.JOINING) {

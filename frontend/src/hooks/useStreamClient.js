@@ -12,6 +12,7 @@ function useStreamClient(session, loadingSession, isHost, isParticipant) {
   const [isInitializingCall, setIsInitializingCall] = useState(true);
 
   useEffect(() => {
+    let isCancelled = false;
     let videoCall = null;
     let chatClientInstance = null;
 
@@ -20,8 +21,12 @@ function useStreamClient(session, loadingSession, isHost, isParticipant) {
       if (!isHost && !isParticipant) return;
       if (session.status === "completed") return;
 
+      setIsInitializingCall(true);
+
       try {
         const { token, userId, userName, userImage } = await sessionApi.getStreamToken();
+
+        if (isCancelled) return;
 
         const client = await initializeStreamClient(
           {
@@ -32,10 +37,22 @@ function useStreamClient(session, loadingSession, isHost, isParticipant) {
           token
         );
 
+        if (isCancelled) {
+          await disconnectStreamClient();
+          return;
+        }
+
         setStreamClient(client);
 
         videoCall = client.call("default", session.callId);
         await videoCall.join({ create: true });
+
+        if (isCancelled) {
+          await videoCall.leave();
+          await disconnectStreamClient();
+          return;
+        }
+
         setCall(videoCall);
 
         const apiKey = import.meta.env.VITE_STREAM_API_KEY;
@@ -49,29 +66,51 @@ function useStreamClient(session, loadingSession, isHost, isParticipant) {
           },
           token
         );
+
+        if (isCancelled) {
+          await chatClientInstance.disconnectUser();
+          await videoCall.leave();
+          await disconnectStreamClient();
+          return;
+        }
+
         setChatClient(chatClientInstance);
 
         const chatChannel = chatClientInstance.channel("messaging", session.callId);
         await chatChannel.watch();
+
+        if (isCancelled) {
+          await chatClientInstance.disconnectUser();
+          await videoCall.leave();
+          await disconnectStreamClient();
+          return;
+        }
+
         setChannel(chatChannel);
       } catch (error) {
-        toast.error("Failed to join video call");
+        if (!isCancelled) toast.error("Failed to join video call");
         console.error("Error init call", error);
       } finally {
-        setIsInitializingCall(false);
+        if (!isCancelled) setIsInitializingCall(false);
       }
     };
 
     if (session && !loadingSession) initCall();
+    else setIsInitializingCall(false);
 
     // cleanup - performance reasons
     return () => {
+      isCancelled = true;
       // iife
       (async () => {
         try {
           if (videoCall) await videoCall.leave();
           if (chatClientInstance) await chatClientInstance.disconnectUser();
           await disconnectStreamClient();
+          setCall(null);
+          setChatClient(null);
+          setChannel(null);
+          setStreamClient(null);
         } catch (error) {
           console.error("Cleanup error:", error);
         }
