@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import cors from "cors";
 import { WebSocketServer } from "ws";
 import jwt from "jsonwebtoken";
@@ -17,6 +18,7 @@ import sessionRoutes from "./routes/sessionRoute.js";
 
 const app = express();
 const __dirname = path.resolve();
+const frontendDistPath = path.join(__dirname, "../frontend/dist");
 
 //middlewares
 app.use(express.json());
@@ -31,12 +33,12 @@ app.use("/api/sessions", sessionRoutes);
 app.get("/health", (req, res) => {
   res.status(200).json({ msg: "api is running" });
 });
-//deployment ready
-if (ENV.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+// Serve frontend only when a local build exists (backend-only deploys like Railway won't have this folder).
+if (ENV.NODE_ENV === "production" && fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
 
   app.get("/{*any}", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+    res.sendFile(path.join(frontendDistPath, "index.html"));
   });
 }
 
