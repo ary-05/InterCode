@@ -28,7 +28,7 @@ A full-stack virtual interview and collaborative programming platform with real-
 
 ```
 intercode/
-├── frontend/     # React SPA (Vite + Tailwind + DaisyUI)
+├── frontend/     # React SPA (Vite + Tailwind)
 └── backend/      # Express REST API + WebSocket server
 ```
 
