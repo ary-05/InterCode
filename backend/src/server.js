@@ -19,7 +19,12 @@ import sessionRoutes from "./routes/sessionRoute.js";
 const app = express();
 const __dirname = path.resolve();
 const frontendDistPath = path.join(__dirname, "../frontend/dist");
-
+app.use((req, res, next) => {
+  if (req.method === 'HEAD') {
+    return res.sendStatus(200);
+  }
+  next();
+});
 //middlewares
 app.use(express.json());
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
