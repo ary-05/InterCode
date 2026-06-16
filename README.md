@@ -94,7 +94,6 @@ cd frontend && npm install && npm run dev
 
 ## Deployment
 
-- Frontend deployed on **Vercel**
-- Backend deployed on **Render**
+- Deployed on **Render**
 - Database hosted on **MongoDB Atlas**
 - Backend serves frontend `dist/` in production via Express
