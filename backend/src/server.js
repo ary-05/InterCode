@@ -18,7 +18,8 @@ import sessionRoutes from "./routes/sessionRoute.js";
 
 const app = express();
 const __dirname = path.resolve();
-const frontendDistPath = path.join(__dirname, "../frontend/dist");
+const frontendDistPath = path.join(__dirname, "../frontend/dist"); 
+//head status
 app.use((req, res, next) => {
   if (req.method === 'HEAD') {
     return res.sendStatus(200);
