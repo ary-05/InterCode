@@ -7,7 +7,7 @@ A full-stack virtual interview and collaborative programming platform with real-
 
 | | Link |
 |--|--|
-| 🚀 Live App | [intercode-wdpe.onrender.com](https://intercode-wdpe.onrender.com/) |
+| 🚀 Live App | [intercode-k0vh.onrender.com](https://intercode-k0vh.onrender.com/) |
 
 ---
 
