@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { useActiveSessions, useCreateSession, useMyRecentSessions } from "../hooks/useSessions";
+import toast from "react-hot-toast";
 
 import Navbar from "../components/Navbar";
 import WelcomeSection from "../components/WelcomeSection";
@@ -9,10 +10,12 @@ import StatsCards from "../components/StatsCards";
 import ActiveSessions from "../components/ActiveSessions";
 import RecentSessions from "../components/RecentSessions";
 import CreateSessionModal from "../components/CreateSessionModal";
+import useIsDesktop from "../hooks/useIsDesktop";
 
 function DashboardPage() {
   const navigate = useNavigate();
   const { user } = useUser();
+  const isDesktop = useIsDesktop();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [roomConfig, setRoomConfig] = useState({ problem: "", difficulty: "", password: "" });
 
@@ -20,6 +23,14 @@ function DashboardPage() {
 
   const { data: activeSessionsData, isLoading: loadingActiveSessions } = useActiveSessions();
   const { data: recentSessionsData, isLoading: loadingRecentSessions } = useMyRecentSessions();
+
+  const handleOpenCreateModal = () => {
+    if (!isDesktop) {
+      toast.error("Please use a laptop or desktop screen to create a session.");
+      return;
+    }
+    setShowCreateModal(true);
+  };
 
   const handleCreateRoom = () => {
     if (!roomConfig.problem || !roomConfig.difficulty || !roomConfig.password) return;
@@ -52,7 +63,7 @@ function DashboardPage() {
     <>
       <div className="min-h-screen bg-[#020018]">
         <Navbar />
-        <WelcomeSection onCreateSession={() => setShowCreateModal(true)} />
+        <WelcomeSection onCreateSession={handleOpenCreateModal} />
 
         {/* Grid layout */}
         <div className="px-7 py-11">
@@ -73,7 +84,7 @@ function DashboardPage() {
       </div>
 
       <CreateSessionModal
-        isOpen={showCreateModal}
+        isOpen={showCreateModal && isDesktop}
         onClose={() => setShowCreateModal(false)}
         roomConfig={roomConfig}
         setRoomConfig={setRoomConfig}

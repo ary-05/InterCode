@@ -6,6 +6,7 @@ import { PROBLEMS } from "../data/problems";
 import { executeCode } from "../lib/piston";
 import Navbar from "../components/Navbar";
 import DesktopOnlyGate from "../components/DesktopOnlyGate";
+import useIsDesktop from "../hooks/useIsDesktop";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { getDifficultyBadgeClass } from "../lib/utils";
 import { Loader2Icon, LogOutIcon, PhoneOffIcon } from "lucide-react";
@@ -22,6 +23,7 @@ function SessionPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { user } = useUser();
+  const isDesktop = useIsDesktop();
   const [output, setOutput] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
   const [isJoinModalOpen, setJoinModalOpen] = useState(false);
@@ -55,19 +57,27 @@ function SessionPage() {
   const [selectedLanguage, setSelectedLanguage] = useState("cpp");
   const [code, setCode] = useState(problemData?.starterCode?.[selectedLanguage] || "");
 
-  // Show join modal if user is not host (always require password for non-hosts)
+  // SINGLE effect controlling the join modal — prevents it from reopening
+  // after the user has already authenticated/joined.
   useEffect(() => {
     if (!session || !user || loadingSession) return;
 
-    // Host doesn't need password
+    // Host never needs a password
     if (isHost) {
       setIsAuthenticated(true);
+      setJoinModalOpen(false);
       return;
     }
 
-    // Non-hosts always need to enter password
+    // Already joined/authenticated — never reopen the modal
+    if (isParticipant || isAuthenticated) {
+      setJoinModalOpen(false);
+      return;
+    }
+
+    // Not host, not yet authenticated — ask for password
     setJoinModalOpen(true);
-  }, [session, user, loadingSession, isHost]);
+  }, [session, user, loadingSession, isHost, isParticipant, isAuthenticated]);
 
   // redirect the "participant" when session ends
   useEffect(() => {
@@ -133,20 +143,12 @@ function SessionPage() {
     );
   };
 
-  // open join modal for participants
-  useEffect(() => {
-    if (!session || !user || loadingSession) return;
-    if (isHost || isParticipant) return;
-
-    setJoinModalOpen(true);
-  }, [session, user, loadingSession, isHost, isParticipant]);
-
   return (
     <div className="h-screen bg-base-100 flex flex-col">
       <Navbar />
 
       <JoinSessionModal
-        isOpen={isJoinModalOpen}
+        isOpen={isJoinModalOpen && isDesktop}
         onClose={() => navigate("/dashboard")}
         onJoinSession={handleJoinSession}
         isJoining={isJoining}
