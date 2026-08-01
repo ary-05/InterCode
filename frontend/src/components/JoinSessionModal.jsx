@@ -7,12 +7,12 @@ function JoinSessionModal({ isOpen, onClose, onJoinSession, isJoining, sessionId
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="bg-[#030023] border border-[#6217d2]/30 rounded-2xl shadow-2xl w-full max-w-md">
-        <div className="p-6">
-          <h3 className="font-bold text-2xl mb-6 text-white font-nunito">Join Session</h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm">
+      <div className="bg-[#030023] border border-[#6217d2]/30 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div className="p-4 sm:p-6">
+          <h3 className="font-bold text-xl sm:text-2xl mb-4 sm:mb-6 text-white font-nunito">Join Session</h3>
 
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* SESSION ID DISPLAY */}
             <div className="space-y-2">
               <label className="block">
@@ -21,7 +21,7 @@ function JoinSessionModal({ isOpen, onClose, onJoinSession, isJoining, sessionId
 
               <input
                 type="text"
-                className="w-full px-4 py-3 bg-[#090040]/50 border border-[#6217d2]/20 rounded-xl text-white/70 font-nunito cursor-not-allowed"
+                className="w-full px-4 py-3 bg-[#090040]/50 border border-[#6217d2]/20 rounded-xl text-white/70 font-nunito cursor-not-allowed truncate"
                 value={sessionId}
                 disabled
                 readOnly
@@ -46,7 +46,7 @@ function JoinSessionModal({ isOpen, onClose, onJoinSession, isJoining, sessionId
             </div>
           </div>
 
-          <div className="flex items-center gap-3 mt-6">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-6">
             <button
               className="flex-1 px-6 py-3 bg-[#090040] hover:bg-[#090040]/70 text-white rounded-xl font-nunito font-semibold border border-[#6217d2]/30 transition-all duration-200"
               onClick={onClose}

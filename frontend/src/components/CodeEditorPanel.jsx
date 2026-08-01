@@ -20,7 +20,7 @@ function CodeEditorPanel({
 
   useEffect(() => {
     if (!sessionId) return;
-    
+
     // Clean up existing connection first
     if (wsRef.current) {
       wsRef.current.close();
@@ -33,7 +33,7 @@ function CodeEditorPanel({
     // Small delay to handle React StrictMode double-mounting
     const timeoutId = setTimeout(() => {
       if (isCancelled) return;
-      
+
       ws = new WebSocket(`${ENV.WS_URL}?sessionId=${sessionId}`);
       wsRef.current = ws;
 
@@ -64,7 +64,7 @@ function CodeEditorPanel({
 
   const handleCodeChange = (newCode) => {
     onCodeChange(newCode);
-    
+
     // Only send if this is a local change, not a remote update
     if (!isRemoteUpdate.current && wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       wsRef.current.send(
@@ -77,7 +77,7 @@ function CodeEditorPanel({
   const handleLanguageChange = (e) => {
     const newLanguage = e.target.value;
     onLanguageChange(e);
-    
+
     // Broadcast language change to other users
     if (!isRemoteUpdate.current && wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       wsRef.current.send(
@@ -98,8 +98,8 @@ function CodeEditorPanel({
   };
 
   return (
-    <div className="h-full bg-[#0d1117] flex flex-col border-l border-[#30363d]">
-      <div className="flex items-center justify-between px-4 py-2.5 bg-[#161b22] border-b border-[#30363d]">
+    <div className="h-full bg-[#0d1117] flex flex-col border-l border-[#30363d] min-h-0">
+      <div className="flex items-center justify-between gap-2 px-4 py-2.5 bg-[#161b22] border-b border-[#30363d] flex-wrap shrink-0">
         <div className="flex items-center gap-3">
           <CodeIcon className="size-4 text-[#6217d2]" />
           <div className="flex items-center gap-2">
@@ -122,34 +122,36 @@ function CodeEditorPanel({
           </div>
         </div>
 
-        <button
-          className="px-4 py-1.5 bg-[#090040] hover:bg-[#090040]/70 border border-[#6217d2]/30 hover:border-[#6217d2] rounded-lg text-white text-sm font-semibold font-nunito transition-all duration-200 flex items-center gap-2"
-          onClick={handleResetCode}
-        >
-          <RotateCcwIcon className="size-4" />
-          Reset
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            className="px-4 py-1.5 bg-[#090040] hover:bg-[#090040]/70 border border-[#6217d2]/30 hover:border-[#6217d2] rounded-lg text-white text-sm font-semibold font-nunito transition-all duration-200 flex items-center gap-2"
+            onClick={handleResetCode}
+          >
+            <RotateCcwIcon className="size-4" />
+            Reset
+          </button>
 
-        <button
-          className="px-4 py-1.5 bg-gradient-to-r from-[#6217d2] to-[#31066e] hover:from-[#31066e] hover:to-[#6217d2] rounded-lg text-white text-sm font-semibold font-nunito shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={isRunning}
-          onClick={onRunCode}
-        >
-          {isRunning ? (
-            <>
-              <Loader2Icon className="size-4 animate-spin" />
-              Running...
-            </>
-          ) : (
-            <>
-              <PlayIcon className="size-4" />
-              Run Code
-            </>
-          )}
-        </button>
+          <button
+            className="px-4 py-1.5 bg-gradient-to-r from-[#6217d2] to-[#31066e] hover:from-[#31066e] hover:to-[#6217d2] rounded-lg text-white text-sm font-semibold font-nunito shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isRunning}
+            onClick={onRunCode}
+          >
+            {isRunning ? (
+              <>
+                <Loader2Icon className="size-4 animate-spin" />
+                Running...
+              </>
+            ) : (
+              <>
+                <PlayIcon className="size-4" />
+                Run Code
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 min-h-0 overflow-hidden">
         <Editor
           height={"100%"}
           language={LANGUAGE_CONFIG[selectedLanguage].monacoLang}
@@ -170,8 +172,9 @@ function CodeEditorPanel({
             smoothScrolling: true,
             contextmenu: true,
             scrollbar: {
-              verticalScrollbarSize: 10,
-              horizontalScrollbarSize: 10,
+              verticalScrollbarSize: 12,
+              horizontalScrollbarSize: 12,
+              useShadows: false,
             },
           }}
         />

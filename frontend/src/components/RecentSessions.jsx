@@ -4,16 +4,16 @@ import { formatDistanceToNow } from "date-fns";
 
 function RecentSessions({ sessions, isLoading }) {
   return (
-    <div className="bg-[#030023]/50 backdrop-blur-sm border border-[#6217d2]/30 rounded-2xl shadow-xl hover:border-[#6217d2] transition-all duration-200 mt-8">
-      <div className="p-6">
-        <div className="flex items-center gap-3 mb-6">
+    <div className="bg-[#030023]/50 backdrop-blur-sm border border-[#6217d2]/30 rounded-2xl shadow-xl hover:border-[#6217d2] transition-all duration-200 mt-6 sm:mt-8">
+      <div className="p-4 sm:p-6">
+        <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
           <div className="p-2 bg-[#6217d2]/20 border border-[#6217d2] rounded-xl">
-            <Clock className="w-5 h-5 text-[#6217d2]" />
+            <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-[#6217d2]" />
           </div>
-          <h2 className="text-2xl font-semibold text-white font-nunito">Your Past Sessions</h2>
+          <h2 className="text-lg sm:text-2xl font-semibold text-white font-nunito">Your Past Sessions</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {isLoading ? (
             <div className="col-span-full flex items-center justify-center py-20">
               <Loader className="w-10 h-10 animate-spin text-[#6217d2]" />
@@ -37,19 +37,19 @@ function RecentSessions({ sessions, isLoading }) {
                   </div>
                 )}
 
-                <div className="p-5">
+                <div className="p-4 sm:p-5">
                   <div className="flex items-start gap-3 mb-4">
                     <div
-                      className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                      className={`shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center ${
                         session.status === "active"
                           ? "bg-success/20 border border-success"
                           : "bg-[#6217d2]/20 border border-[#6217d2]"
                       }`}
                     >
-                      <Code2 className={`w-6 h-6 ${session.status === "active" ? "text-success" : "text-[#6217d2]"}`} />
+                      <Code2 className={`w-5 h-5 sm:w-6 sm:h-6 ${session.status === "active" ? "text-success" : "text-[#6217d2]"}`} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-base mb-1 truncate text-white font-nunito">{session.problem}</h3>
+                      <h3 className="font-bold text-sm sm:text-base mb-1 truncate text-white font-nunito">{session.problem}</h3>
                       <span
                         className={`badge badge-sm ${getDifficultyBadgeClass(session.difficulty)}`}
                       >
@@ -58,9 +58,9 @@ function RecentSessions({ sessions, isLoading }) {
                     </div>
                   </div>
 
-                  <div className="space-y-2 text-sm text-white/80 mb-4 font-nunito">
+                  <div className="space-y-2 text-xs sm:text-sm text-white/80 mb-4 font-nunito">
                     <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
+                      <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                       <span>
                         {formatDistanceToNow(new Date(session.createdAt), {
                           addSuffix: true,
@@ -68,7 +68,7 @@ function RecentSessions({ sessions, isLoading }) {
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Users className="w-4 h-4" />
+                      <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                       <span>
                         {session.participant ? "2" : "1"} participant
                         {session.participant ? "s" : ""}

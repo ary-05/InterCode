@@ -42,10 +42,10 @@ function VideoCallUI({ chatClient, channel }) {
   }
 
   return (
-    <div className="h-full flex gap-3 relative str-video">
-      <div className="flex-1 flex flex-col gap-3">
+    <div className="h-full flex gap-3 relative str-video min-h-0">
+      <div className="flex-1 flex flex-col gap-3 min-h-0 min-w-0">
         {/* Participants count badge and Chat Toggle */}
-        <div className="flex items-center justify-between gap-2 bg-[#030023]/50 backdrop-blur-sm border border-[#6217d2]/30 p-3 rounded-xl shadow-xl">
+        <div className="flex items-center justify-between gap-2 bg-[#030023]/50 backdrop-blur-sm border border-[#6217d2]/30 p-3 rounded-xl shadow-xl shrink-0">
           <div className="flex items-center gap-2">
             <UsersIcon className="w-5 h-5 text-[#6217d2]" />
             <span className="font-semibold text-white font-nunito">
@@ -56,8 +56,8 @@ function VideoCallUI({ chatClient, channel }) {
             <button
               onClick={() => setIsChatOpen(!isChatOpen)}
               className={`px-4 py-2 rounded-lg font-nunito font-semibold flex items-center gap-2 transition-all duration-200 ${
-                isChatOpen 
-                  ? "bg-[#6217d2] text-white hover:bg-[#7528e3]" 
+                isChatOpen
+                  ? "bg-[#6217d2] text-white hover:bg-[#7528e3]"
                   : "bg-[#090040] text-white/70 border border-[#6217d2]/30 hover:border-[#6217d2]/50"
               }`}
               title={isChatOpen ? "Hide chat" : "Show chat"}
@@ -68,11 +68,11 @@ function VideoCallUI({ chatClient, channel }) {
           )}
         </div>
 
-        <div className="flex-1 bg-[#090040]/50 backdrop-blur-sm border border-[#6217d2]/30 rounded-xl overflow-hidden relative shadow-xl">
+        <div className="flex-1 min-h-0 bg-[#090040]/50 backdrop-blur-sm border border-[#6217d2]/30 rounded-xl overflow-hidden relative shadow-xl">
           <SpeakerLayout />
         </div>
 
-        <div className="bg-[#030023]/50 backdrop-blur-sm border border-[#6217d2]/30 p-3 rounded-xl shadow-xl flex justify-center">
+        <div className="bg-[#030023]/50 backdrop-blur-sm border border-[#6217d2]/30 p-3 rounded-xl shadow-xl flex justify-center shrink-0">
           <CallControls onLeave={() => navigate("/dashboard")} />
         </div>
       </div>
@@ -81,13 +81,13 @@ function VideoCallUI({ chatClient, channel }) {
 
       {chatClient && channel && (
         <div
-          className={`flex flex-col rounded-xl shadow-xl overflow-hidden bg-[#030023]/50 backdrop-blur-sm border border-[#6217d2]/30 transition-all duration-300 ease-in-out ${
+          className={`flex flex-col min-h-0 rounded-xl shadow-xl overflow-hidden bg-[#030023]/50 backdrop-blur-sm border border-[#6217d2]/30 transition-all duration-300 ease-in-out ${
             isChatOpen ? "w-80 opacity-100" : "w-0 opacity-0"
           }`}
         >
           {isChatOpen && (
             <>
-              <div className="bg-[#090040]/50 backdrop-blur-sm p-3 border-b border-[#6217d2]/30 flex items-center justify-between">
+              <div className="bg-[#090040]/50 backdrop-blur-sm p-3 border-b border-[#6217d2]/30 flex items-center justify-between shrink-0">
                 <h3 className="font-semibold text-white font-nunito">Session Chat</h3>
                 <button
                   onClick={() => setIsChatOpen(false)}
@@ -97,7 +97,7 @@ function VideoCallUI({ chatClient, channel }) {
                   <XIcon className="size-5" />
                 </button>
               </div>
-              <div className="flex-1 overflow-hidden stream-chat-dark">
+              <div className="flex-1 min-h-0 overflow-hidden stream-chat-dark">
                 <Chat client={chatClient} theme="str-chat__theme-dark">
                   <Channel channel={channel}>
                     <Window>

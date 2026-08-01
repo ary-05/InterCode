@@ -14,12 +14,12 @@ function CreateSessionModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="bg-[#030023] border border-[#6217d2]/30 rounded-2xl shadow-2xl w-full max-w-2xl">
-        <div className="p-6">
-          <h3 className="font-bold text-2xl mb-6 text-white font-nunito">Create New Session</h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm">
+      <div className="bg-[#030023] border border-[#6217d2]/30 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="p-4 sm:p-6">
+          <h3 className="font-bold text-xl sm:text-2xl mb-4 sm:mb-6 text-white font-nunito">Create New Session</h3>
 
-          <div className="space-y-8">
+          <div className="space-y-5 sm:space-y-8">
             {/* PROBLEM SELECTION */}
             <div className="space-y-2">
               <label className="block">
@@ -74,12 +74,12 @@ function CreateSessionModal({
 
             {/* ROOM SUMMARY */}
             {roomConfig.problem && (
-              <div className="bg-success/10 border border-success/30 rounded-xl p-4">
+              <div className="bg-success/10 border border-success/30 rounded-xl p-3 sm:p-4">
                 <div className="flex items-start gap-3">
                   <Code2Icon className="size-5 text-success flex-shrink-0 mt-0.5" />
-                  <div className="text-white font-nunito">
+                  <div className="text-white font-nunito min-w-0">
                     <p className="font-semibold mb-1">Room Summary:</p>
-                    <p className="text-sm text-white/80">
+                    <p className="text-sm text-white/80 break-words">
                       Problem: <span className="font-medium">{roomConfig.problem}</span>
                     </p>
                     <p className="text-sm text-white/80">
@@ -91,7 +91,7 @@ function CreateSessionModal({
             )}
           </div>
 
-          <div className="flex items-center gap-3 mt-6">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-6">
             <button 
               className="flex-1 px-6 py-3 bg-[#090040] hover:bg-[#090040]/70 text-white rounded-xl font-nunito font-semibold border border-[#6217d2]/30 transition-all duration-200"
               onClick={onClose}

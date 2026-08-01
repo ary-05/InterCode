@@ -2,8 +2,8 @@ import { TerminalIcon, CheckCircle2Icon, XCircleIcon } from "lucide-react";
 
 function OutputPanel({ output }) {
   return (
-    <div className="h-full bg-[#0d1117] flex flex-col border-l border-t border-[#30363d]">
-      <div className="px-4 py-2.5 bg-[#161b22] border-b border-[#30363d] flex items-center gap-2">
+    <div className="h-full bg-[#0d1117] flex flex-col border-l border-t border-[#30363d] min-h-0">
+      <div className="px-4 py-2.5 bg-[#161b22] border-b border-[#30363d] flex items-center gap-2 shrink-0">
         <TerminalIcon className="size-4 text-[#6217d2]" />
         <span className="font-semibold text-sm text-white font-nunito">Output</span>
         {output !== null && (
@@ -22,7 +22,18 @@ function OutputPanel({ output }) {
           </span>
         )}
       </div>
-      <div className="flex-1 overflow-auto p-4 bg-[#0d1117]">
+      <div
+        className="flex-1 min-h-0 overflow-auto p-4 bg-[#0d1117]
+          [&::-webkit-scrollbar]:w-3
+          [&::-webkit-scrollbar-track]:bg-[#0d1117]
+          [&::-webkit-scrollbar-thumb]:bg-[#30363d]
+          [&::-webkit-scrollbar-thumb]:rounded-full
+          [&::-webkit-scrollbar-thumb]:border-2
+          [&::-webkit-scrollbar-thumb]:border-[#0d1117]
+          [&::-webkit-scrollbar-thumb:hover]:bg-[#6217d2]
+          [scrollbar-width:thin]
+          [scrollbar-color:#30363d_#0d1117]"
+      >
         {output === null ? (
           <div className="space-y-2">
             <TerminalIcon className="size-8 text-[#30363d]" />
