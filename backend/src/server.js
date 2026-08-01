@@ -15,6 +15,7 @@ import { clerkMiddleware } from "@clerk/express";
 import { protectRoute } from "./middleware/protectRoute.js";
 import chatRoutes from "./routes/chatRoutes.js";
 import sessionRoutes from "./routes/sessionRoute.js";
+import compilerRouter from "./routes/compilerRoute.js";
 
 const app = express();
 const __dirname = path.resolve();
@@ -35,6 +36,7 @@ app.use(clerkMiddleware()); //this adds auth to request object : req.auth()
 app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use("/api/chat", chatRoutes);
 app.use("/api/sessions", sessionRoutes);
+app.use("/api/compiler", compilerRouter);
 
 app.get("/health", (req, res) => {
   res.status(200).json({ msg: "api is running" });
